@@ -1,134 +1,123 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Krunal Chavda — 3D Portfolio</title>
-<meta name="description" content="Krunal Chavda — IT student. 3D animated premium portfolio with tools, chat demo, and monetization hooks.">
-<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Krunal • The Web King — 3D Portfolio</title>
+<meta name="description" content="Krunal Chavda — Premium 3D portfolio, tools, demo chat, monetization-ready." />
+<link rel="icon" href="assets/logo.svg">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<canvas id="bg"></canvas>
+<!-- 3D background canvas handled by three.js -->
+<div id="three-root"></div>
 
-<header class="nav">
-  <div class="wrap">
-    <div class="brand">
-      <img src="assets/logo.svg" alt="logo" class="logo">
-      <div>
-        <h1>Krunal <span class="muted">Chavda</span></h1>
-        <div class="tag">IT Engineering • Web & UI • Future-ready</div>
-      </div>
+<header class="nav wrap">
+  <div class="brand">
+    <img src="assets/logo.svg" alt="K" class="logo">
+    <div class="brand-text">
+      <div class="name">Krunal <span class="muted">Chavda</span></div>
+      <div class="role">IT Engineering • Web & UI</div>
     </div>
-    <nav class="links">
-      <a href="#services">Services</a>
-      <a href="#projects">Projects</a>
-      <a href="#tools">Tools</a>
-      <a href="#contact" class="btn">Hire Me</a>
-    </nav>
   </div>
+  <nav class="nav-links">
+    <a href="#tools">Tools</a>
+    <a href="#services">Services</a>
+    <a href="#projects">Projects</a>
+    <a href="#contact" class="btn">Hire Me</a>
+  </nav>
 </header>
 
 <main class="wrap">
-  <section class="hero card glass" id="home" aria-label="Hero">
+  <section class="hero card" id="home">
     <div class="hero-left">
-      <h2 class="eyebrow">Build • Launch • Earn</h2>
-      <h1 class="hero-title">I make fast, human-first web tools that people use.</h1>
-      <p class="lead">I’m <strong>Krunal</strong>, an IT engineering student (2nd year). I build practical web tools — chat demos, QR, compressors — designed to attract users and revenue.</p>
-      <div class="cta-row">
-        <a class="cta btn" href="#tools">Try Tools</a>
-        <a class="cta ghost" href="#projects">See Work</a>
+      <h1 class="big">Design. Ship. Earn.</h1>
+      <p class="lead">I build high-converting web tools and landing pages that people use — fast, modern, and revenue-focused.</p>
+      <div class="cta">
+        <a class="btn" href="#tools">Try Tools</a>
+        <a class="ghost" href="#projects">See Projects</a>
       </div>
       <div class="badges">
-        <span class="pill">HTML</span><span class="pill">CSS</span><span class="pill">JS</span><span class="pill">PWA</span>
+        <span>HTML</span><span>CSS</span><span>JavaScript</span><span>GitHub Pages</span>
       </div>
     </div>
     <div class="hero-right">
-      <div class="device-3d">
-        <div class="screen card glass">
+      <div class="device">
+        <div class="screen" id="mini-screen">
           <div class="screen-top">LIVE DEMO</div>
           <div class="screen-body" id="mini-chat">
-            <div class="chat-log" id="mini-log"><div class="bot">Hi — ask for "earn ideas" or "resume tips".</div></div>
-            <div class="chat-row">
-              <input id="mini-input" placeholder="Type... (demo)"/>
+            <div class="log" id="mini-log"><div class="bot">Ask for "earn ideas" or "resume tips".</div></div>
+            <div class="row">
+              <input id="mini-in" placeholder="Type demo..."/>
               <button id="mini-send">Send</button>
             </div>
           </div>
         </div>
-        <div class="glow"></div>
+        <div class="device-glow"></div>
       </div>
     </div>
   </section>
 
-  <section id="services" class="card glass">
-    <h2>Services that make money fast</h2>
+  <section id="tools" class="card">
+    <h2>Tools — quick & viral</h2>
     <div class="grid cols-3">
-      <div class="service">
-        <h3>Landing Pages</h3>
-        <p class="muted">₹999 - ₹1999 per local business. Quick delivery, GitHub Pages hosting.</p>
+      <div class="tool card small">
+        <h4>AI-style Chat (demo)</h4>
+        <p class="muted">Canned smart replies. Plug any API later.</p>
       </div>
-      <div class="service">
-        <h3>Logo & Branding</h3>
-        <p class="muted">Fast logo + 1-page identity for startups and shops.</p>
+      <div class="tool card small">
+        <h4>QR Generator</h4>
+        <p class="muted">Generate & download QR images.</p>
       </div>
-      <div class="service">
-        <h3>SaaS Widgets</h3>
-        <p class="muted">Small paid features: QR menu, image compressor embed, paid reports.</p>
+      <div class="tool card small">
+        <h4>Image Compressor</h4>
+        <p class="muted">Compress client-side, super fast.</p>
       </div>
     </div>
   </section>
 
-  <section id="projects" class="card glass">
+  <section id="services" class="card">
+    <h2>Money-making Services</h2>
+    <div class="grid cols-3">
+      <div class="service card">
+        <h3>Landing Pages</h3>
+        <p class="muted">₹999 — fast delivery + hosting help.</p>
+      </div>
+      <div class="service card">
+        <h3>Custom Tools</h3>
+        <p class="muted">Paid widgets, QR menus, small SaaS features.</p>
+      </div>
+      <div class="service card">
+        <h3>Freelance UI</h3>
+        <p class="muted">Pixel-perfect UI for startups.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects" class="card">
     <h2>Featured Projects</h2>
     <div class="grid cols-3">
-      <article class="tile">
-        <strong>AI Tools Hub</strong>
-        <p class="muted">Chat demo, QR, compressor — client-side tools made to go viral.</p>
-      </article>
-      <article class="tile">
-        <strong>Portfolio Template</strong>
-        <p class="muted">This site — PWA-ready, offline cache, mobile-first.</p>
-      </article>
-      <article class="tile">
-        <strong>Touch Calculator</strong>
-        <p class="muted">Smooth touch keys, mascot reactions, tiny UX details.</p>
-      </article>
+      <article class="tile card"><strong>AI Tools Hub</strong><p class="muted">Chat, QR, Compressor.</p></article>
+      <article class="tile card"><strong>Portfolio Template</strong><p class="muted">This site.</p></article>
+      <article class="tile card"><strong>Touch Calculator</strong><p class="muted">Mobile-first UX.</p></article>
     </div>
   </section>
 
-  <section id="tools" class="card glass">
-    <h2>Free Tools (Demo)</h2>
-    <div class="grid cols-2">
-      <div class="card tool">
-        <h4>QR Generator</h4>
-        <input id="qr-text" placeholder="Enter URL or text">
-        <select id="qr-size"><option value="240">240</option><option value="360">360</option></select>
-        <button id="qr-gen" class="btn">Generate</button>
-        <canvas id="qr-canvas" width="240" height="240"></canvas>
-      </div>
-      <div class="card tool">
-        <h4>Image Compressor</h4>
-        <input id="img-file" type="file" accept="image/*">
-        <label>Quality <input id="img-q" type="range" min="0.1" max="0.95" step="0.05" value="0.7"></label>
-        <button id="img-compress" class="btn">Compress</button>
-        <canvas id="img-canvas"></canvas>
-      </div>
-    </div>
-  </section>
-
-  <section id="contact" class="card glass">
-    <h2>Contact & Hire</h2>
+  <section id="contact" class="card">
+    <h2>Contact</h2>
     <p class="muted">Email: <a href="mailto:kanodalwadi345@gmail.com">kanodalwadi345@gmail.com</a></p>
     <div class="row">
       <a class="btn" href="mailto:kanodalwadi345@gmail.com">Email Me</a>
-      <a class="btn ghost" href="https://wa.me/919999999999">WhatsApp</a>
+      <a class="ghost" href="https://wa.me/919999999999">WhatsApp</a>
     </div>
-    <div class="notice">Pro tip: Add Resume.pdf to repo root and link it here to boost interview invites.</div>
+    <p class="notice">Tip: Add Resume.pdf to repo root to boost recruiter interest.</p>
   </section>
 </main>
 
-<footer class="wrap muted">© <span id="year"></span> Krunal Chavda — Built with premium 3D vibes.</footer>
+<footer class="wrap muted">© <span id="year"></span> Krunal Chavda — The Web King</footer>
 
+<!-- three.js CDN for real 3D scene (works online) -->
+<script src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
 <script src="assets/main.js"></script>
 </body>
 </html>
