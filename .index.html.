@@ -1,0 +1,419 @@
+# Create a small multi-page, animated, dark futuristic website ZIP for the user.
+# It includes: animated navbar, logo section, 3D tilt cards, page transitions,
+# multi-level pages/subpages, dark neon/glassmorphism theme, and responsive design.
+
+import os, textwrap, zipfile, json, pathlib, shutil
+
+root = "/mnt/data/futuristic_site"
+if os.path.exists(root):
+    shutil.rmtree(root)
+os.makedirs(root, exist_ok=True)
+
+# Create directories
+dirs = [
+    "assets/css",
+    "assets/js",
+    "assets/img",
+    "pages",
+    "pages/blog",
+    "pages/services",
+]
+for d in dirs:
+    os.makedirs(os.path.join(root, d), exist_ok=True)
+
+# Basic assets (placeholder logo as SVG)
+logo_svg = """<svg width="140" height="40" viewBox="0 0 140 40" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0%" stop-color="#00e5ff"/>
+    <stop offset="100%" stop-color="#7c4dff"/>
+  </linearGradient>
+  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+    <feGaussianBlur stdDeviation="3.5" result="coloredBlur"/>
+    <feMerge>
+      <feMergeNode in="coloredBlur"/>
+      <feMergeNode in="SourceGraphic"/>
+    </feMerge>
+  </filter>
+</defs>
+<g filter="url(#glow)">
+  <rect rx="8" width="40" height="40" fill="url(#g)"/>
+  <text x="50" y="27" font-family="Poppins, Arial, sans-serif" font-size="20" fill="url(#g)">NEONX</text>
+</g>
+</svg>
+"""
+with open(os.path.join(root, "assets/img/logo.svg"), "w") as f:
+    f.write(logo_svg)
+
+# CSS
+css = """
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+:root{
+  --bg:#0b0f1a;
+  --card:#0f1524cc;
+  --text:#dbe9ff;
+  --muted:#95a3c6;
+  --accent:#00e5ff;
+  --accent2:#7c4dff;
+  --glass: rgba(255,255,255,0.06);
+  --border: rgba(255,255,255,0.09);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:Poppins,system-ui,Arial;
+  color:var(--text);
+  background:
+    radial-gradient(1200px 600px at 10% -10%, #132035 10%, transparent 60%),
+    radial-gradient(900px 600px at 110% 10%, #1a1035 10%, transparent 60%),
+    var(--bg);
+  min-height:100dvh;
+}
+
+.container{max-width:1100px;margin:0 auto;padding:0 20px}
+
+.nav{
+  position:sticky;top:0;z-index:50;
+  backdrop-filter: blur(10px);
+  background: linear-gradient(180deg, rgba(10,14,25,.9), rgba(10,14,25,.5));
+  border-bottom:1px solid var(--border);
+}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);font-weight:700;letter-spacing:.5px}
+.logo img{height:28px}
+.nav-links{display:flex;gap:18px;align-items:center}
+.nav-links a{
+  color:var(--muted);text-decoration:none;font-weight:500;position:relative;padding:8px 10px;border-radius:12px;
+  transition:color .2s ease;
+}
+.nav-links a:hover{color:var(--text)}
+.nav-links a.active::after, .nav-links a:hover::after{
+  content:"";position:absolute;left:10px;right:10px;bottom:3px;height:2px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  border-radius:2px;box-shadow:0 0 12px var(--accent2);
+}
+
+.hero{
+  padding:72px 0 40px;
+  display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:center;
+}
+.badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--glass);border:1px solid var(--border);border-radius:40px;
+  padding:8px 12px;font-size:12px;color:var(--muted)
+}
+.title{font-size:44px;line-height:1.1;margin:14px 0 12px}
+.subtitle{color:var(--muted);max-width:52ch}
+.cta{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
+.button{
+  appearance:none;border:0;cursor:pointer;
+  padding:12px 18px;border-radius:14px;font-weight:600;
+  background:linear-gradient(90deg,var(--accent),var(--accent2)); color:#001019;
+  box-shadow:0 8px 28px rgba(124,77,255,0.35);
+  text-decoration:none;
+}
+.button.ghost{
+  background:transparent;color:var(--text);border:1px solid var(--border)
+}
+
+.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:26px 0 10px}
+.card{
+  background:var(--card);border:1px solid var(--border);border-radius:18px;
+  padding:18px;min-height:160px;position:relative;overflow:hidden;
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  will-change: transform;
+}
+.card::before{
+  content:"";position:absolute;inset:-1px;
+  background:conic-gradient(from 0deg at 80% 20%, rgba(0,229,255,.2), rgba(124,77,255,.2), transparent 30%);
+  filter:blur(18px);opacity:.6;pointer-events:none;
+}
+.card h3{margin:6px 0 8px;font-size:18px}
+.card p{margin:0;color:var(--muted);font-size:14px}
+
+.section{padding:32px 0;border-top:1px solid var(--border)}
+.section h2{font-size:26px;margin:0 0 12px}
+.logo-row{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.logo-tile{
+  display:flex;align-items:center;justify-content:center;
+  padding:16px;border-radius:14px;background:var(--glass);border:1px solid var(--border)
+}
+.logo-tile img{height:24px;opacity:.9}
+
+.footer{padding:26px 0;color:var(--muted);border-top:1px solid var(--border);margin-top:26px}
+
+@media (max-width:900px){
+  .hero{grid-template-columns:1fr}
+  .card-grid{grid-template-columns:repeat(2,1fr)}
+  .logo-row{grid-template-columns:repeat(3,1fr)}
+}
+@media (max-width:560px){
+  .title{font-size:34px}
+  .card-grid{grid-template-columns:1fr}
+}
+/* Page transition */
+.page-enter{opacity:0; transform:translateY(8px)}
+.page-enter-active{opacity:1; transform:translateY(0); transition:opacity .35s ease, transform .35s ease}
+.page-leave{opacity:1; transform:translateY(0)}
+.page-leave-active{opacity:0; transform:translateY(-8px); transition:opacity .25s ease, transform .25s ease}
+"""
+with open(os.path.join(root, "assets/css/style.css"), "w") as f:
+    f.write(css)
+
+# JS - vanilla tilt (tiny), nav active handling, page transition helper
+js = r"""
+/* Tiny Vanilla Tilt-ish for cards */
+document.querySelectorAll('.card[data-tilt]').forEach((card)=>{
+  let rect;
+  function enter(){ rect = card.getBoundingClientRect(); card.style.transition='transform .08s ease' }
+  function move(e){
+    const x = e.clientX - rect.left, y = e.clientY - rect.top;
+    const rx = ((y/rect.height)-.5)*8;
+    const ry = ((x/rect.width)-.5)*-8;
+    card.style.transform = `perspective(600px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(0)`;
+  }
+  function leave(){ card.style.transform='none' }
+  card.addEventListener('mouseenter', enter);
+  card.addEventListener('mousemove', move);
+  card.addEventListener('mouseleave', leave);
+});
+
+/* Active link highlight */
+(function(){
+  const path = location.pathname.replace(/\/+$/,''); 
+  document.querySelectorAll('.nav-links a').forEach(a=>{
+    if(a.getAttribute('href')===path.split('/').pop() || (a.getAttribute('href')==='index.html' && path.endsWith('/') ) ){
+      a.classList.add('active');
+    }
+  });
+})();
+
+/* Simple page transition for internal links */
+document.querySelectorAll('a[href$=".html"]').forEach(a=>{
+  a.addEventListener('click', (e)=>{
+    const url = a.getAttribute('href');
+    if(url && !url.startsWith('http')){
+      e.preventDefault();
+      const root = document.querySelector('#page-root');
+      root.classList.add('page-leave'); root.offsetWidth; // reflow
+      root.classList.add('page-leave-active');
+      setTimeout(()=>{ window.location.href = url; }, 200);
+    }
+  });
+});
+
+window.addEventListener('pageshow', ()=>{
+  const root = document.querySelector('#page-root');
+  root.classList.add('page-enter'); root.offsetWidth;
+  root.classList.add('page-enter-active');
+});
+"""
+with open(os.path.join(root, "assets/js/app.js"), "w") as f:
+    f.write(js)
+
+# Common HTML head and nav components
+def head(title):
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>{title}</title>
+  <meta name="description" content="NeonX – a dark futuristic multi-page site with animations."/>
+  <link rel="stylesheet" href="assets/css/style.css"/>
+  <link rel="preload" href="assets/img/logo.svg" as="image">
+  <link rel="icon" href="assets/img/logo.svg">
+</head>
+<body>
+<div id="page-root" class="page-enter">
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a class="logo" href="index.html"><img src="assets/img/logo.svg" alt="logo"> NeonX</a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="pages/services/index.html">Services</a>
+        <a href="pages/blog/index.html">Blog</a>
+        <a href="pages/about.html">About</a>
+        <a href="pages/contact.html">Contact</a>
+      </div>
+    </div>
+  </nav>
+  <main class="container">
+"""
+def foot():
+    return """
+  </main>
+  <footer class="footer">
+    <div class="container">© 2025 NeonX. Built with ♥ — Dark Futuristic Theme.</div>
+  </footer>
+</div>
+<script src="assets/js/app.js"></script>
+</body>
+</html>"""
+
+# Index (Home) with hero + 3D tilt cards + logos
+index_html = head("NeonX — Futuristic Web") + """
+<section class="hero">
+  <div>
+    <span class="badge">⚡ Modern • Glassmorphism • Neon</span>
+    <h1 class="title">Build futuristic experiences that glow.</h1>
+    <p class="subtitle">A sleek, multi‑page template with animated navbar, 3D tilt cards, subtle page transitions and responsive layout. Perfect for quick GitHub Pages deployments.</p>
+    <div class="cta">
+      <a class="button" href="pages/services/index.html">Explore Services</a>
+      <a class="button ghost" href="pages/about.html">Learn More</a>
+    </div>
+  </div>
+  <div>
+    <div class="card" style="min-height:240px">
+      <h3>Live Preview Box</h3>
+      <p>This card mimics a feature window. Add screenshots or GIFs here.</p>
+    </div>
+    <div class="card-grid">
+      <div class="card" data-tilt>
+        <h3>3D Tilt Cards</h3>
+        <p>Hover to tilt. Lightweight vanilla JS — no external library required.</p>
+      </div>
+      <div class="card" data-tilt>
+        <h3>Page Transitions</h3>
+        <p>Smooth enter/leave animations between internal pages.</p>
+      </div>
+      <div class="card" data-tilt>
+        <h3>Responsive</h3>
+        <p>Mobile friendly grid with clean typography and neon accents.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Trusted Logos</h2>
+  <div class="logo-row">
+    <div class="logo-tile"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="React"></div>
+    <div class="logo-tile"><img src="https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg" alt="Node"></div>
+    <div class="logo-tile"><img src="https://upload.wikimedia.org/wikipedia/commons/3/33/Figma-logo.svg" alt="Figma"></div>
+    <div class="logo-tile"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png" alt="JS"></div>
+    <div class="logo-tile"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg" alt="TS"></div>
+  </div>
+</section>
+""" + foot()
+
+with open(os.path.join(root, "index.html"), "w") as f:
+    f.write(index_html)
+
+# About page
+about_html = head("About — NeonX") + """
+<section class="section" style="padding-top:40px">
+  <h2>About NeonX</h2>
+  <p class="subtitle">We craft dark, glossy, neon‑kissed UIs. This template is built with plain HTML, CSS & JS so you can deploy anywhere.</p>
+  <div class="card-grid">
+    <div class="card" data-tilt><h3>Fast</h3><p>No heavy frameworks. Instant GitHub Pages deploy.</p></div>
+    <div class="card" data-tilt><h3>Flexible</h3><p>Easy to customize colors and sections.</p></div>
+    <div class="card" data-tilt><h3>Animated</h3><p>Subtle glow, transitions, and interactive cards.</p></div>
+  </div>
+</section>
+""" + foot()
+with open(os.path.join(root, "pages/about.html"), "w") as f:
+    f.write(about_html)
+
+# Contact page
+contact_html = head("Contact — NeonX") + """
+<section class="section" style="padding-top:40px">
+  <h2>Contact Us</h2>
+  <p class="subtitle">Drop a message. This is a static form example (no backend). Connect it to Netlify/Vercel forms or add your own endpoint.</p>
+  <div class="card" style="max-width:680px">
+    <form onsubmit="event.preventDefault(); alert('Thanks! Form demo only.');">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <input required placeholder="First name" style="padding:12px;border-radius:10px;border:1px solid var(--border);background:var(--glass);color:var(--text)">
+        <input required placeholder="Last name" style="padding:12px;border-radius:10px;border:1px solid var(--border);background:var(--glass);color:var(--text)">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px">
+        <input required type="email" placeholder="Email address" style="padding:12px;border-radius:10px;border:1px solid var(--border);background:var(--glass);color:var(--text)">
+        <textarea rows="5" placeholder="Your message" style="padding:12px;border-radius:10px;border:1px solid var(--border);background:var(--glass);color:var(--text)"></textarea>
+      </div>
+      <div class="cta"><button class="button" type="submit">Send Message</button></div>
+    </form>
+  </div>
+</section>
+""" + foot()
+with open(os.path.join(root, "pages/contact.html"), "w") as f:
+    f.write(contact_html)
+
+# Services main
+services_index = head("Services — NeonX") + """
+<section class="section" style="padding-top:40px">
+  <h2>Services</h2>
+  <p class="subtitle">Choose a category below. Sub‑pages demonstrate multi-level navigation.</p>
+  <div class="card-grid">
+    <a class="card" data-tilt href="web.html"><h3>Web UI</h3><p>Landing pages, dashboards, UI kits.</p></a>
+    <a class="card" data-tilt href="branding.html"><h3>Branding</h3><p>Logos, palettes, style guides.</p></a>
+    <a class="card" data-tilt href="motion.html"><h3>Motion</h3><p>Micro‑interactions, icon animations.</p></a>
+  </div>
+</section>
+""" + foot()
+with open(os.path.join(root, "pages/services/index.html"), "w") as f:
+    f.write(services_index)
+
+for slug, title, body in [
+    ("web.html","Web UI","We build blazing‑fast websites and dashboards with a futuristic look."),
+    ("branding.html","Branding","Unique identity systems with neon accents & elegant typography."),
+    ("motion.html","Motion","Subtle but meaningful animations that enhance UX.")
+]:
+    html = head(f"{title} — Services") + f"""
+<section class="section" style="padding-top:40px">
+  <a class="badge" href="index.html">← Back to Services</a>
+  <h2>{title}</h2>
+  <div class="card-grid">
+    <div class="card" data-tilt><h3>Overview</h3><p>{body}</p></div>
+    <div class="card" data-tilt><h3>Packages</h3><p>Starter, Pro, and Elite — pick what suits you.</p></div>
+    <div class="card" data-tilt><h3>CTA</h3><p><a class="button" href="../contact.html">Request a Quote</a></p></div>
+  </div>
+</section>
+""" + foot()
+    with open(os.path.join(root, f"pages/services/{slug}"), "w") as f:
+        f.write(html)
+
+# Blog index + sample post
+blog_index = head("Blog — NeonX") + """
+<section class="section" style="padding-top:40px">
+  <h2>Blog</h2>
+  <p class="subtitle">Sample sub‑pages for your articles.</p>
+  <div class="card-grid">
+    <a class="card" data-tilt href="post.html"><h3>Designing with Glow</h3><p>Tips for tasteful neon and glass.</p></a>
+    <a class="card" data-tilt href="post.html"><h3>Micro‑Interactions</h3><p>Make UIs feel alive.</p></a>
+    <a class="card" data-tilt href="post.html"><h3>Perf & Polish</h3><p>How to keep it smooth and fast.</p></a>
+  </div>
+</section>
+""" + foot()
+with open(os.path.join(root, "pages/blog/index.html"), "w") as f:
+    f.write(blog_index)
+
+blog_post = head("Designing with Glow — Blog") + """
+<section class="section" style="padding-top:40px">
+  <a class="badge" href="index.html">← Back to Blog</a>
+  <h2>Designing with Glow</h2>
+  <p class="subtitle">Use neon carefully: focus accents, avoid full neon backgrounds, and prefer soft gradients.</p>
+  <div class="card" data-tilt>
+    <h3>Key Points</h3>
+    <ul>
+      <li>Limit bright hues to accents and borders.</li>
+      <li>Blend glassmorphism with subtle shadows.</li>
+      <li>Respect accessibility: keep contrast high.</li>
+    </ul>
+  </div>
+</section>
+""" + foot()
+with open(os.path.join(root, "pages/blog/post.html"), "w") as f:
+    f.write(blog_post)
+
+# Make ZIP
+zip_path = "/mnt/data/neonx_futuristic_site.zip"
+with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as z:
+    for folder, _, files in os.walk(root):
+        for file in files:
+            path = os.path.join(folder, file)
+            z.write(path, os.path.relpath(path, root))
+
+zip_path
