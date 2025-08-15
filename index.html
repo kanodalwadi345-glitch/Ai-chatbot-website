@@ -1,123 +1,78 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Krunal • The Web King — 3D Portfolio</title>
-<meta name="description" content="Krunal Chavda — Premium 3D portfolio, tools, demo chat, monetization-ready." />
-<link rel="icon" href="assets/logo.svg">
-<link rel="stylesheet" href="style.css">
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>NeonX — Futuristic Web</title>
+  <meta name="description" content="NeonX – a dark futuristic multi-page site with animations."/>
+  <link rel="stylesheet" href="assets/css/style.css"/>
+  <link rel="preload" href="assets/img/logo.svg" as="image">
+  <link rel="icon" href="assets/img/logo.svg">
 </head>
 <body>
-<!-- 3D background canvas handled by three.js -->
-<div id="three-root"></div>
+<div id="page-root" class="page-enter">
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a class="logo" href="index.html"><img src="assets/img/logo.svg" alt="logo"> NeonX</a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="pages/services/index.html">Services</a>
+        <a href="pages/blog/index.html">Blog</a>
+        <a href="pages/about.html">About</a>
+        <a href="pages/contact.html">Contact</a>
+      </div>
+    </div>
+  </nav>
+  <main class="container">
 
-<header class="nav wrap">
-  <div class="brand">
-    <img src="assets/logo.svg" alt="K" class="logo">
-    <div class="brand-text">
-      <div class="name">Krunal <span class="muted">Chavda</span></div>
-      <div class="role">IT Engineering • Web & UI</div>
+<section class="hero">
+  <div>
+    <span class="badge">⚡ Modern • Glassmorphism • Neon</span>
+    <h1 class="title">Build futuristic experiences that glow.</h1>
+    <p class="subtitle">A sleek, multi‑page template with animated navbar, 3D tilt cards, subtle page transitions and responsive layout. Perfect for quick GitHub Pages deployments.</p>
+    <div class="cta">
+      <a class="button" href="pages/services/index.html">Explore Services</a>
+      <a class="button ghost" href="pages/about.html">Learn More</a>
     </div>
   </div>
-  <nav class="nav-links">
-    <a href="#tools">Tools</a>
-    <a href="#services">Services</a>
-    <a href="#projects">Projects</a>
-    <a href="#contact" class="btn">Hire Me</a>
-  </nav>
-</header>
-
-<main class="wrap">
-  <section class="hero card" id="home">
-    <div class="hero-left">
-      <h1 class="big">Design. Ship. Earn.</h1>
-      <p class="lead">I build high-converting web tools and landing pages that people use — fast, modern, and revenue-focused.</p>
-      <div class="cta">
-        <a class="btn" href="#tools">Try Tools</a>
-        <a class="ghost" href="#projects">See Projects</a>
+  <div>
+    <div class="card" style="min-height:240px">
+      <h3>Live Preview Box</h3>
+      <p>This card mimics a feature window. Add screenshots or GIFs here.</p>
+    </div>
+    <div class="card-grid">
+      <div class="card" data-tilt>
+        <h3>3D Tilt Cards</h3>
+        <p>Hover to tilt. Lightweight vanilla JS — no external library required.</p>
       </div>
-      <div class="badges">
-        <span>HTML</span><span>CSS</span><span>JavaScript</span><span>GitHub Pages</span>
+      <div class="card" data-tilt>
+        <h3>Page Transitions</h3>
+        <p>Smooth enter/leave animations between internal pages.</p>
+      </div>
+      <div class="card" data-tilt>
+        <h3>Responsive</h3>
+        <p>Mobile friendly grid with clean typography and neon accents.</p>
       </div>
     </div>
-    <div class="hero-right">
-      <div class="device">
-        <div class="screen" id="mini-screen">
-          <div class="screen-top">LIVE DEMO</div>
-          <div class="screen-body" id="mini-chat">
-            <div class="log" id="mini-log"><div class="bot">Ask for "earn ideas" or "resume tips".</div></div>
-            <div class="row">
-              <input id="mini-in" placeholder="Type demo..."/>
-              <button id="mini-send">Send</button>
-            </div>
-          </div>
-        </div>
-        <div class="device-glow"></div>
-      </div>
-    </div>
-  </section>
+  </div>
+</section>
 
-  <section id="tools" class="card">
-    <h2>Tools — quick & viral</h2>
-    <div class="grid cols-3">
-      <div class="tool card small">
-        <h4>AI-style Chat (demo)</h4>
-        <p class="muted">Canned smart replies. Plug any API later.</p>
-      </div>
-      <div class="tool card small">
-        <h4>QR Generator</h4>
-        <p class="muted">Generate & download QR images.</p>
-      </div>
-      <div class="tool card small">
-        <h4>Image Compressor</h4>
-        <p class="muted">Compress client-side, super fast.</p>
-      </div>
-    </div>
-  </section>
+<section class="section">
+  <h2>Trusted Logos</h2>
+  <div class="logo-row">
+    <div class="logo-tile"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="React"></div>
+    <div class="logo-tile"><img src="https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg" alt="Node"></div>
+    <div class="logo-tile"><img src="https://upload.wikimedia.org/wikipedia/commons/3/33/Figma-logo.svg" alt="Figma"></div>
+    <div class="logo-tile"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png" alt="JS"></div>
+    <div class="logo-tile"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg" alt="TS"></div>
+  </div>
+</section>
 
-  <section id="services" class="card">
-    <h2>Money-making Services</h2>
-    <div class="grid cols-3">
-      <div class="service card">
-        <h3>Landing Pages</h3>
-        <p class="muted">₹999 — fast delivery + hosting help.</p>
-      </div>
-      <div class="service card">
-        <h3>Custom Tools</h3>
-        <p class="muted">Paid widgets, QR menus, small SaaS features.</p>
-      </div>
-      <div class="service card">
-        <h3>Freelance UI</h3>
-        <p class="muted">Pixel-perfect UI for startups.</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="projects" class="card">
-    <h2>Featured Projects</h2>
-    <div class="grid cols-3">
-      <article class="tile card"><strong>AI Tools Hub</strong><p class="muted">Chat, QR, Compressor.</p></article>
-      <article class="tile card"><strong>Portfolio Template</strong><p class="muted">This site.</p></article>
-      <article class="tile card"><strong>Touch Calculator</strong><p class="muted">Mobile-first UX.</p></article>
-    </div>
-  </section>
-
-  <section id="contact" class="card">
-    <h2>Contact</h2>
-    <p class="muted">Email: <a href="mailto:kanodalwadi345@gmail.com">kanodalwadi345@gmail.com</a></p>
-    <div class="row">
-      <a class="btn" href="mailto:kanodalwadi345@gmail.com">Email Me</a>
-      <a class="ghost" href="https://wa.me/919999999999">WhatsApp</a>
-    </div>
-    <p class="notice">Tip: Add Resume.pdf to repo root to boost recruiter interest.</p>
-  </section>
-</main>
-
-<footer class="wrap muted">© <span id="year"></span> Krunal Chavda — The Web King</footer>
-
-<!-- three.js CDN for real 3D scene (works online) -->
-<script src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
-<script src="assets/main.js"></script>
+  </main>
+  <footer class="footer">
+    <div class="container">© 2025 NeonX. Built with ♥ — Dark Futuristic Theme.</div>
+  </footer>
+</div>
+<script src="assets/js/app.js"></script>
 </body>
 </html>

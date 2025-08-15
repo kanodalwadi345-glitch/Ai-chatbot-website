@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Contact — NeonX</title>
+  <meta name="description" content="NeonX – a dark futuristic multi-page site with animations."/>
+  <link rel="stylesheet" href="assets/css/style.css"/>
+  <link rel="preload" href="assets/img/logo.svg" as="image">
+  <link rel="icon" href="assets/img/logo.svg">
+</head>
+<body>
+<div id="page-root" class="page-enter">
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a class="logo" href="index.html"><img src="assets/img/logo.svg" alt="logo"> NeonX</a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="pages/services/index.html">Services</a>
+        <a href="pages/blog/index.html">Blog</a>
+        <a href="pages/about.html">About</a>
+        <a href="pages/contact.html">Contact</a>
+      </div>
+    </div>
+  </nav>
+  <main class="container">
+
+<section class="section" style="padding-top:40px">
+  <h2>Contact Us</h2>
+  <p class="subtitle">Drop a message. This is a static form example (no backend). Connect it to Netlify/Vercel forms or add your own endpoint.</p>
+  <div class="card" style="max-width:680px">
+    <form onsubmit="event.preventDefault(); alert('Thanks! Form demo only.');">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <input required placeholder="First name" style="padding:12px;border-radius:10px;border:1px solid var(--border);background:var(--glass);color:var(--text)">
+        <input required placeholder="Last name" style="padding:12px;border-radius:10px;border:1px solid var(--border);background:var(--glass);color:var(--text)">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px">
+        <input required type="email" placeholder="Email address" style="padding:12px;border-radius:10px;border:1px solid var(--border);background:var(--glass);color:var(--text)">
+        <textarea rows="5" placeholder="Your message" style="padding:12px;border-radius:10px;border:1px solid var(--border);background:var(--glass);color:var(--text)"></textarea>
+      </div>
+      <div class="cta"><button class="button" type="submit">Send Message</button></div>
+    </form>
+  </div>
+</section>
+
+  </main>
+  <footer class="footer">
+    <div class="container">© 2025 NeonX. Built with ♥ — Dark Futuristic Theme.</div>
+  </footer>
+</div>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
