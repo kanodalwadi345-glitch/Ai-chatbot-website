@@ -1,0 +1,235 @@
+// assets/main.js — fixed, uses global THREE when available, fallback canvas, and working handlers
+
+(function(){
+  // SMALL UTILITY
+  const $ = s => document.querySelector(s);
+  const $$ = s => document.querySelectorAll(s);
+
+  // ---------- 3D background (use global THREE if present) ----------
+  function initThreeBackground(){
+    if(window.THREE){
+      try {
+        const container = document.getElementById('three-root') || document.body;
+        // avoid creating multiple renderers
+        if(container.__three_inited) return;
+        container.__three_inited = true;
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 1, 2000);
+        camera.position.z = 400;
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(innerWidth, innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+        renderer.domElement.style.position = 'fixed';
+        renderer.domElement.style.inset = '0';
+        renderer.domElement.style.zIndex = '0';
+        document.body.insertBefore(renderer.domElement, document.body.firstChild);
+
+        const count = Math.max(80, Math.floor((innerWidth*innerHeight)/10000));
+        const geometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(count*3);
+        const sizes = new Float32Array(count);
+        for(let i=0;i<count;i++){
+          positions[i*3] = (Math.random()-0.5)*2000;
+          positions[i*3+1] = (Math.random()-0.5)*1200;
+          positions[i*3+2] = (Math.random()-0.5)*800;
+          sizes[i] = Math.random()*6+2;
+        }
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions,3));
+        geometry.setAttribute('size', new THREE.BufferAttribute(sizes,1));
+
+        const vertex = `
+          attribute float size;
+          varying vec3 vColor;
+          void main(){
+            vColor = position;
+            vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+            gl_PointSize = size * ( 300.0 / -mvPosition.z );
+            gl_Position = projectionMatrix * mvPosition;
+          }
+        `;
+        const fragment = `
+          varying vec3 vColor;
+          void main(){
+            float d = distance(gl_PointCoord, vec2(0.5));
+            if(d>0.5) discard;
+            gl_FragColor = vec4(0.22,0.86,0.74,0.95);
+          }
+        `;
+        const mat = new THREE.ShaderMaterial({ vertexShader: vertex, fragmentShader: fragment, transparent: true });
+        const points = new THREE.Points(geometry, mat);
+        scene.add(points);
+
+        window.addEventListener('resize', ()=> {
+          camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix();
+          renderer.setSize(innerWidth, innerHeight);
+        });
+
+        let t = 0;
+        function animate(){
+          t += 0.004;
+          const pos = geometry.attributes.position.array;
+          for(let i=0;i<pos.length;i+=3){
+            pos[i+1] += Math.sin(t + i)*0.12;
+          }
+          geometry.attributes.position.needsUpdate = true;
+          points.rotation.y += 0.0009;
+          renderer.render(scene, camera);
+          requestAnimationFrame(animate);
+        }
+        animate();
+        return;
+      } catch(err){
+        console.warn('three background failed:', err);
+      }
+    }
+    // fallback canvas
+    fallbackCanvas();
+  }
+
+  function fallbackCanvas(){
+    if(document.getElementById('bg-fallback')) return;
+    const c = document.createElement('canvas'); c.id='bg-fallback'; c.style.position='fixed'; c.style.inset='0'; c.style.zIndex='0'; document.body.appendChild(c);
+    const ctx = c.getContext('2d');
+    function resize(){ c.width = innerWidth; c.height = innerHeight; }
+    addEventListener('resize', resize); resize();
+    const pts = [];
+    for(let i=0;i<120;i++) pts.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight, r:1+Math.random()*3, vx:(Math.random()-0.5)*0.5, vy:(Math.random()-0.5)*0.5});
+    function draw(){
+      ctx.clearRect(0,0,c.width,c.height);
+      const g = ctx.createLinearGradient(0,0,c.width,c.height);
+      g.addColorStop(0,'rgba(51,227,166,0.06)'); g.addColorStop(1,'rgba(94,198,255,0.04)');
+      ctx.fillStyle = g; ctx.fillRect(0,0,c.width,c.height);
+      for(let p of pts){
+        p.x+=p.vx; p.y+=p.vy;
+        if(p.x<0) p.x=c.width; if(p.x>c.width) p.x=0; if(p.y<0) p.y=c.height; if(p.y>c.height) p.y=0;
+        ctx.beginPath(); ctx.fillStyle='rgba(180,210,255,0.8)'; ctx.arc(p.x,p.y,p.r,0,6.28); ctx.fill();
+      }
+      requestAnimationFrame(draw);
+    }
+    draw();
+  }
+
+  // ---------- UI / button handlers ----------
+
+  // Scroll to section helper
+  function goTo(hash){
+    try{
+      const el = document.querySelector(hash);
+      if(el) el.scrollIntoView({behavior:'smooth', block:'center'});
+    }catch(e){}
+  }
+
+  // Wire nav links (works for <a href="#..."> too)
+  document.addEventListener('click', function(e){
+    const a = e.target.closest('a');
+    if(!a) return;
+    const href = a.getAttribute('href');
+    if(!href) return;
+    if(href.startsWith('#')){
+      e.preventDefault();
+      goTo(href);
+    }
+  });
+
+  // Hire / contact buttons: WhatsApp & email
+  // Replace these numbers/emails with your actual ones if needed
+  const whatsappNumber = '919999999999'; // <-- change to your real number in repo if needed
+  const email = 'kanodalwadi345@gmail.com';
+
+  // If any element with id 'hire-whatsapp' exists, wire it
+  const hireBtn = document.getElementById('hire-whatsapp');
+  if(hireBtn){
+    hireBtn.addEventListener('click', ()=> {
+      window.open('https://wa.me/' + whatsappNumber, '_blank');
+    });
+  }
+  // generic mailto on elements with data-mail attribute
+  document.querySelectorAll('[data-mail]').forEach(el=>{
+    el.addEventListener('click', ()=> { window.location.href = 'mailto:' + email; });
+  });
+
+  // Mini chat demo (IDs: mini-in, mini-send, mini-log)
+  const miniLog = $('#mini-log');
+  const miniIn = $('#mini-in');
+  const miniSend = $('#mini-send');
+  if(miniSend && miniIn && miniLog){
+    miniSend.addEventListener('click', ()=> {
+      const v = miniIn.value.trim(); if(!v) return;
+      const d = document.createElement('div'); d.className = 'user'; d.textContent = v; miniLog.appendChild(d); miniIn.value='';
+      setTimeout(()=> {
+        const reply = /earn|money|freelance|pais/i.test(v) ?
+          'Start ₹999 landing pages for local shops. Upsell logo + hosting.' :
+          'Nice! This is a demo UI — connect an AI API to make it real.';
+        const b = document.createElement('div'); b.className='bot'; b.textContent = reply; miniLog.appendChild(b);
+        miniLog.scrollTop = miniLog.scrollHeight;
+      }, 350);
+    });
+    miniIn.addEventListener('keydown', e=>{ if(e.key==='Enter') miniSend.click(); });
+  }
+
+  // QR generator (IDs used in template: qr-text, qr-size, qr-gen, qr-canvas)
+  const qrGen = $('#qr-gen'), qrCanvas = $('#qr-canvas');
+  if(qrGen && qrCanvas){
+    qrGen.addEventListener('click', ()=> {
+      const text = (document.getElementById('qr-text')||{value:'krunal'}).value;
+      const size = parseInt((document.getElementById('qr-size')||{value:240}).value) || 240;
+      qrCanvas.width = size; qrCanvas.height = size;
+      const ctx2 = qrCanvas.getContext('2d'); ctx2.fillStyle='#fff'; ctx2.fillRect(0,0,size,size); ctx2.fillStyle='#001822';
+      for(let y=0;y<33;y++){ for(let x=0;x<33;x++){ if((x*y + text.length + x*3 + y*7) % 7 < 3) ctx2.fillRect(x*(size/33), y*(size/33), Math.ceil(size/33), Math.ceil(size/33)); } }
+    });
+  }
+
+  // Image compressor (IDs: img-file, img-q, img-compress, img-canvas)
+  const imgFile = $('#img-file'), imgQ = $('#img-q'), imgCompress = $('#img-compress'), imgCanvas = $('#img-canvas');
+  if(imgFile && imgCanvas && imgCompress){
+    let loadedImg = new Image();
+    imgFile.addEventListener('change', e=>{
+      const f = e.target.files[0]; if(!f) return;
+      const reader = new FileReader(); reader.onload = ev => {
+        loadedImg.onload = ()=> {
+          const w = Math.min(900, loadedImg.width);
+          const h = Math.round(loadedImg.height*(w/loadedImg.width));
+          imgCanvas.width = w; imgCanvas.height = h;
+          const c = imgCanvas.getContext('2d'); c.clearRect(0,0,w,h); c.drawImage(loadedImg,0,0,w,h);
+        };
+        loadedImg.src = ev.target.result;
+      };
+      reader.readAsDataURL(f);
+    });
+    imgCompress.addEventListener('click', ()=> {
+      if(!loadedImg.src) return alert('Upload an image first');
+      const q = parseFloat(imgQ.value||'0.7');
+      const url = imgCanvas.toDataURL('image/jpeg', q);
+      const a = document.createElement('a'); a.href = url; a.download = 'compressed.jpg'; a.click();
+    });
+  }
+
+  // Download resume button (if exists id=download-resume)
+  const dlResume = document.getElementById('download-resume');
+  if(dlResume){
+    dlResume.addEventListener('click', ()=> {
+      // Ensure resume.pdf uploaded to repo root with name 'Resume.pdf' or change path
+      const url = '/Resume.pdf';
+      // Open in new tab to let browser download
+      window.open(url, '_blank');
+    });
+  }
+
+  // Ensure any non-functional elements are gracefully handled
+  document.addEventListener('DOMContentLoaded', ()=> {
+    // start background
+    initThreeBackground();
+    // soft delay: attach fallback for dynamic elements
+    setTimeout(()=> {
+      // if some elements expected but missing, log for debug
+      ['qr-gen','mini-send','img-compress','download-resume'].forEach(id=>{
+        if(document.getElementById(id) && !document.getElementById(id).dataset.bound){
+          document.getElementById(id).dataset.bound = '1';
+        }
+      });
+    },800);
+  });
+
+})();
