@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Krunal Chavda — Portfolio</title>
+  <meta name="description" content="IT engineering student portfolio — web, UI, and practical tools.">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="manifest" href="pwa/manifest.webmanifest">
+  <meta name="theme-color" content="#0ea5e9">
+</head>
+<body>
+  <header class="site-header container">
+    <div class="brand">
+      <img src="assets/img/logo.svg" alt="KC" class="logo"/>
+      <div>
+        <h1>Krunal Chavda</h1>
+        <p class="tag">IT Engineering (2nd Year) • Web Learner</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <button class="nav__link" data-goto="#home">Home</button>
+      <button class="nav__link" data-goto="#projects">Projects</button>
+      <button class="nav__link" data-goto="#play">Playground</button>
+      <button class="nav__link" data-goto="#about">About</button>
+      <a class="btn" href="mailto:kanodalwadi345@gmail.com">Hire Me</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="home" class="hero container">
+      <div class="hero__text">
+        <h2>Hello — I'm <span class="accent">Krunal</span></h2>
+        <p>I build fast, clean web UIs and practical mini‑apps. This portfolio is lightweight, responsive and works offline (PWA). All code is <strong>hand‑crafted</strong> to show real skills.</p>
+        <div class="chips">
+          <span>HTML</span><span>CSS</span><span>JavaScript</span><span>GitHub Pages</span>
+        </div>
+        <div class="cta">
+          <a class="btn" href="#projects">See Projects</a>
+          <a class="btn btn--ghost" href="#about">About Me</a>
+        </div>
+        <div class="stats">
+          <div><strong id="stat-years">0</strong><span>Years learning</span></div>
+          <div><strong id="stat-tools">0</strong><span>Tools on this page</span></div>
+          <div><strong id="stat-speed">0</strong><span>Lighthouse perf baseline</span></div>
+        </div>
+      </div>
+      <div class="hero__card">
+        <img src="assets/img/cover.svg" alt="cover graphic"/>
+        <div class="card">
+          <p>Quick Info</p>
+          <ul>
+            <li>Location: India</li>
+            <li>Email: <a href="mailto:kanodalwadi345@gmail.com">kanodalwadi345@gmail.com</a></li>
+            <li>GitHub: <a href="https://github.com/krunalc806-maker" target="_blank">krunalc806-maker</a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects" class="container projects">
+      <h3>Projects</h3>
+      <div class="grid">
+        <article class="tile">
+          <h4>Calculator App</h4>
+          <p>Responsive calculator with keyboard input. Great for learning DOM & events.</p>
+          <button class="btn btn--sm" data-open="calc-modal">Open</button>
+        </article>
+        <article class="tile">
+          <h4>QR Generator</h4>
+          <p>Create QR codes for any text/URL. Works offline.</p>
+          <button class="btn btn--sm" data-open="qr-modal">Open</button>
+        </article>
+        <article class="tile">
+          <h4>Image Compressor</h4>
+          <p>Compress images in-browser (client‑side).</p>
+          <button class="btn btn--sm" data-open="img-modal">Open</button>
+        </article>
+        <article class="tile">
+          <h4>Text Toolkit</h4>
+          <p>Word/char count, case change, slugify — one place.</p>
+          <button class="btn btn--sm" data-open="text-modal">Open</button>
+        </article>
+        <article class="tile">
+          <h4>AI Chat Demo</h4>
+          <p>Local demo that mimics chat flow without a server.</p>
+          <button class="btn btn--sm" data-open="chat-modal">Open</button>
+        </article>
+      </div>
+    </section>
+
+    <section id="play" class="container play">
+      <h3>Playground</h3>
+      <div class="play-grid">
+        <div class="card">
+          <h5>Pomodoro</h5>
+          <div class="timer"><span id="timer">25:00</span></div>
+          <div class="row">
+            <button class="btn btn--sm" id="start">Start</button>
+            <button class="btn btn--sm" id="reset">Reset</button>
+          </div>
+        </div>
+        <div class="card">
+          <h5>Notes</h5>
+          <textarea id="notes" rows="6" placeholder="Write your ideas…"></textarea>
+          <button class="btn btn--sm" id="saveNotes">Save</button>
+        </div>
+        <div class="card">
+          <h5>Text‑to‑Speech</h5>
+          <textarea id="tts" rows="3" placeholder="Type text to speak…"></textarea>
+          <button class="btn btn--sm" id="speak">Speak</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="container about">
+      <h3>About Me</h3>
+      <p>I'm an IT engineering student (2nd year) focused on building clean, usable web experiences. What you see here is built with HTML, CSS, and modern JavaScript — no heavy frameworks — to highlight fundamentals companies care about.</p>
+      <ul class="bullets">
+        <li>Performance‑first, mobile‑first</li>
+        <li>Accessible components and keyboard support</li>
+        <li>Version control and deployment with GitHub Pages</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer container">
+    <p>© <span id="year"></span> Krunal Chavda • Built with care.</p>
+    <div class="links">
+      <a href="mailto:kanodalwadi345@gmail.com">Email</a>
+      <a href="https://github.com/krunalc806-maker" target="_blank">GitHub</a>
+    </div>
+  </footer>
+
+  <!-- Modals -->
+  <div class="modal" id="calc-modal" aria-hidden="true">
+    <div class="modal__card">
+      <button class="modal__close" data-close>×</button>
+      <h4>Calculator</h4>
+      <div class="calc">
+        <input id="calc-screen" readonly>
+        <div class="keys" id="calc-keys"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="qr-modal" aria-hidden="true">
+    <div class="modal__card">
+      <button class="modal__close" data-close>×</button>
+      <h4>QR Generator</h4>
+      <input id="qr-text" placeholder="Type text or URL">
+      <canvas id="qr-canvas" width="240" height="240"></canvas>
+      <button class="btn btn--sm" id="qr-download">Download PNG</button>
+    </div>
+  </div>
+
+  <div class="modal" id="img-modal" aria-hidden="true">
+    <div class="modal__card">
+      <button class="modal__close" data-close>×</button>
+      <h4>Image Compressor</h4>
+      <input type="file" id="img-input" accept="image/*">
+      <label>Quality: <input type="range" id="img-quality" min="0.1" max="0.95" step="0.05" value="0.6"></label>
+      <canvas id="img-canvas"></canvas>
+      <button class="btn btn--sm" id="img-download">Download</button>
+    </div>
+  </div>
+
+  <div class="modal" id="text-modal" aria-hidden="true">
+    <div class="modal__card">
+      <button class="modal__close" data-close>×</button>
+      <h4>Text Toolkit</h4>
+      <textarea id="txt" rows="6" placeholder="Paste your text…"></textarea>
+      <div class="row">
+        <button class="btn btn--sm" id="toUpper">UPPER</button>
+        <button class="btn btn--sm" id="toLower">lower</button>
+        <button class="btn btn--sm" id="slug">slugify</button>
+        <button class="btn btn--sm" id="count">count</button>
+      </div>
+      <pre id="txt-out"></pre>
+    </div>
+  </div>
+
+  <div class="modal" id="chat-modal" aria-hidden="true">
+    <div class="modal__card">
+      <button class="modal__close" data-close>×</button>
+      <h4>AI Chat Demo (client‑only)</h4>
+      <div class="chat">
+        <div id="chat-log" class="chat__log" aria-live="polite"></div>
+        <form id="chat-form" class="chat__form">
+          <input id="chat-input" placeholder="Ask anything… (demo)">
+          <button class="btn btn--sm">Send</button>
+        </form>
+      </div>
+      <p class="muted">This is a local demo to show UI/UX — no server or API key used.</p>
+    </div>
+  </div>
+
+  <script src="assets/js/qrcode.min.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script src="pwa/sw-register.js"></script>
+</body>
+</html>
