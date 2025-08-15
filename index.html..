@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>My 3D Site — Premium</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg1:#0b1022;--bg2:#0a1432;--glass:rgba(255,255,255,.08);
+    --pri:#62d0ff;--pri2:#00e0b8;--txt:#e7f3ff;--muted:#9fb3c8;
+    --radius:22px;--shadow:0 18px 50px rgba(0,0,0,.35);--speed:.8s;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;font-family:Inter,system-ui,Arial,Segoe UI;
+    color:var(--txt);
+    background:
+      radial-gradient(1200px 900px at -10% -10%, #7c3aed14, transparent),
+      radial-gradient(1200px 900px at 110% 10%, #22d3ee1a, transparent),
+      linear-gradient(140deg,var(--bg1),var(--bg2));
+    overflow-x:hidden;
+  }
+
+  /* BACKGROUND FX */
+  #stars{position:fixed;inset:0;z-index:-2}
+  .aurora{position:fixed;inset:-20% -40% -10% -40%;z-index:-1;
+    background:conic-gradient(from 0deg at 50% 50%, #00e0b825, #62d0ff20, #a78bfa20, #00e0b825);
+    filter:blur(90px);animation:spin 32s linear infinite}
+  @keyframes spin{to{transform:rotate(1turn)}}
+
+  /* HEADER / LOGO SECTION */
+  header{
+    position:sticky;top:0;z-index:30;backdrop-filter:blur(10px);
+    background:linear-gradient(180deg,rgba(10,16,40,.75),rgba(10,16,40,.25));
+    border-bottom:1px solid #ffffff18;
+  }
+  .nav{max-width:1200px;margin:auto;display:flex;align-items:center;gap:16px;padding:10px 16px}
+  .logo{
+    display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none;color:var(--txt)
+  }
+  .logo .mark{
+    width:42px;height:42px;border-radius:12px;display:grid;place-items:center;
+    background:linear-gradient(135deg,var(--pri),var(--pri2));box-shadow:0 10px 30px #0007
+  }
+  .logo .title{font-weight:800;letter-spacing:.3px}
+  .spacer{flex:1}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap}
+  .tab{
+    position:relative;border:none;background:transparent;color:var(--txt);
+    padding:10px 12px;border-radius:12px;cursor:pointer;
+  }
+  .tab:after{
+    content:"";position:absolute;left:12px;right:12px;bottom:6px;height:2px;
+    background:linear-gradient(90deg,var(--pri),var(--pri2));transform:scaleX(0);
+    transform-origin:left;transition:transform .3s ease
+  }
+  .tab:hover:after{transform:scaleX(1)}
+  .tab.active{background:#ffffff10;border:1px solid #ffffff18}
+  .btn{
+    border:none;cursor:pointer;color:#06101f;background:linear-gradient(180deg,#5eead4,#38bdf8);
+    padding:10px 14px;border-radius:14px;box-shadow:var(--shadow)
+  }
+
+  /* LAYOUT */
+  .stage{perspective:1200px;max-width:1200px;margin:24px auto 90px;padding:0 16px}
+  .page{
+    min-height:68vh;padding:22px;border-radius:var(--radius);
+    background:linear-gradient(180deg,#ffffff12,#ffffff08);border:1px solid #ffffff1a;
+    box-shadow:var(--shadow);transform-style:preserve-3d;overflow:hidden
+  }
+  .grid{display:grid;gap:14px}
+  @media(min-width:820px){.grid.cols-3{grid-template-columns:repeat(3,1fr)}}
+  .glass{background:var(--glass);border:1px solid #ffffff24;border-radius:18px;padding:14px}
+  .muted{color:var(--muted)}
+  .input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid #ffffff24;background:#0c1634;color:var(--txt);outline:none}
+
+  /* CARDS + 3D tilt */
+  .card{
+    padding:16px;border-radius:18px;background:linear-gradient(180deg,#ffffff16,#ffffff0a);
+    border:1px solid #ffffff18;transition:transform .15s ease,box-shadow .15s ease;background-origin:border-box;
+    transform-style:preserve-3d;cursor:pointer;position:relative;overflow:hidden
+  }
+  .card:hover{box-shadow:0 22px 44px #0006}
+  .badge{position:absolute;top:10px;right:10px;font-size:11px;padding:6px 10px;background:linear-gradient(90deg,var(--pri),var(--pri2));color:#081021;border-radius:999px}
+  .tag{font-size:12px;color:var(--muted)}
+  .hero{display:grid;gap:18px;align-items:center}
+  @media(min-width:900px){.hero{grid-template-columns:1.1fr .9fr}}
+
+  /* ROUTE ANIMS */
+  .anim{opacity:0;transform:translateZ(-300px) rotateX(-10deg) rotateY(15deg) scale(.96)}
+  .anim.in{animation:enter var(--speed) cubic-bezier(.2,.8,.2,1) forwards}
+  .anim.flip{animation:flip var(--speed) cubic-bezier(.2,.8,.2,1) forwards}
+  .anim.slide{animation:slide var(--speed) cubic-bezier(.2,.8,.2,1) forwards}
+  .anim.zoom{animation:zoom var(--speed) cubic-bezier(.2,.8,.2,1) forwards}
+  @keyframes enter{to{opacity:1;transform:none}}
+  @keyframes flip{from{opacity:0;transform:rotateY(-90deg) translateZ(200px)}to{opacity:1;transform:none}}
+  @keyframes slide{from{opacity:0;transform:translate3d(60px,0,-200px) rotateY(-10deg)}to{opacity:1;transform:none}}
+  @keyframes zoom{from{opacity:0;transform:scale(.9) translateZ(-200px)}to{opacity:1;transform:none}}
+
+  footer{max-width:1200px;margin:0 auto 60px;padding:0 16px;color:#94a3b8}
+  a{color:var(--pri)}
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+<div class="aurora"></div>
+
+<!-- HEADER with LOGO -->
+<header>
+  <nav class="nav">
+    <a class="logo" href="#/home" data-route="#/home" title="Go Home">
+      <div class="mark" aria-hidden="true">
+        <!-- Animated SVG Logo (replace with your PNG/SVG if you want) -->
+        <svg width="26" height="26" viewBox="0 0 48 48" fill="none">
+          <defs>
+            <linearGradient id="g" x1="0" y1="0" x2="48" y2="48">
+              <stop stop-color="#0b122b"/><stop offset="1" stop-color="#0b122b"/>
+            </linearGradient>
+          </defs>
+          <rect x="2" y="2" width="44" height="44" rx="10" fill="url(#g)" opacity=".25"/>
+          <path d="M10 26c12-16 16-16 28 0" stroke="white" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="24" cy="24" r="5">
+            <animate attributeName="r" dur="2.6s" values="4;7;4" repeatCount="indefinite"/>
+          </circle>
+        </svg>
+      </div>
+      <div class="title">My Brand</div>
+    </a>
+    <div class="spacer"></div>
+    <div class="tabs">
+      <button class="tab" data-route="#/home">Home</button>
+      <button class="tab" data-route="#/projects">Projects</button>
+      <button class="tab" data-route="#/services">Services</button>
+      <button class="tab" data-route="#/contact">Contact</button>
+    </div>
+    <div class="spacer"></div>
+    <button id="theme" class="btn">Toggle Theme</button>
+  </nav>
+</header>
+
+<!-- MAIN -->
+<main class="stage">
+
+  <!-- HOME -->
+  <section id="route-home" class="page anim in">
+    <div class="hero">
+      <div>
+        <h1 style="margin:.2em 0 .1em">Design fast, ship <span style="background:linear-gradient(90deg,var(--pri2),var(--pri));-webkit-background-clip:text;background-clip:text;color:transparent">beautiful</span>.</h1>
+        <p class="muted">Single-file site with 3D transitions, animated logo, featured cards, and nested sub-pages. Perfect for GitHub Pages.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+          <button class="btn" data-route="#/projects">Explore Projects</button>
+          <a class="btn" href="#/services">View Services</a>
+        </div>
+      </div>
+      <div class="glass">
+        <div class="grid cols-3">
+          <div class="card tilt"><span class="badge">3D</span><h3>Flip</h3><p class="tag">Route transition</p></div>
+          <div class="card tilt"><h3>Slide</h3><p class="tag">Depth motion</p></div>
+          <div class="card tilt"><h3>Zoom</h3><p class="tag">Sub-pages</p></div>
+        </div>
+      </div>
+    </div>
+
+    <h2 style="margin:22px 0 8px">Featured</h2>
+    <div class="grid cols-3">
+      <div class="card tilt" data-route="#/projects/qr"><span class="badge">Live</span><h3>QR Generator</h3><p class="tag">Create & download</p></div>
+      <div class="card tilt" data-route="#/projects/demo"><h3>Interactive Demo</h3><p class="tag">Counter + Palette</p></div>
+      <div class="card tilt" data-route="#/projects/gallery"><h3>3D Gallery</h3><p class="tag">Tilted cards</p></div>
+    </div>
+  </section>
+
+  <!-- PROJECTS (with sub-pages) -->
+  <section id="route-projects" class="page anim" hidden>
+    <h2>Projects</h2>
+    <p class="muted">Pick a project. Sub-pages open below without reload.</p>
+    <div class="grid cols-3">
+      <div class="card tilt" data-route="#/projects/qr"><h3>QR Generator</h3><p class="tag">Generate & download</p></div>
+      <div class="card tilt" data-route="#/projects/demo"><h3>Interactive Demo</h3><p class="tag">Counters, palette</p></div>
+      <div class="card tilt" data-route="#/projects/gallery"><h3>3D Gallery</h3><p class="tag">Carousel tilt</p></div>
+    </div>
+    <div id="projects-outlet" class="glass" style="margin-top:16px;padding:16px">
+      <p class="muted">Tip: click a project card to open a <b>sub-page</b> here.</p>
+    </div>
+  </section>
+
+  <!-- SERVICES (with sub-pages) -->
+  <section id="route-services" class="page anim" hidden>
+    <h2>Services</h2>
+    <div class="grid cols-3">
+      <div class="card tilt" data-route="#/services/web"><span class="badge">Popular</span><h3>Web Design</h3><p class="tag">Landing + SPA</p></div>
+      <div class="card tilt" data-route="#/services/brand"><h3>Branding</h3><p class="tag">Logo + Kit</p></div>
+      <div class="card tilt" data-route="#/services/seo"><h3>SEO Boost</h3><p class="tag">Speed + Rank</p></div>
+    </div>
+    <div id="services-outlet" class="glass" style="margin-top:16px;padding:16px">
+      <p class="muted">Select a service to see details, pricing & FAQs.</p>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="route-contact" class="page anim" hidden>
+    <h2>Contact</h2>
+    <div class="grid" style="grid-template-columns:1.1fr .9fr">
+      <form id="contactForm" class="glass">
+        <label>Name</label>
+        <input class="input" id="name" placeholder="Your name" />
+        <label style="margin-top:8px">Email</label>
+        <input class="input" id="email" placeholder="you@example.com" />
+        <label style="margin-top:8px">Message</label>
+        <textarea class="input" id="msg" rows="5" placeholder="Tell me about your project…"></textarea>
+        <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+          <button class="btn" type="submit">Send</button>
+          <a class="btn" id="vcard" download="contact.vcf">Download vCard</a>
+        </div>
+        <p class="muted" style="margin-top:8px">This demo stores your message locally (no server). Replace with your endpoint later.</p>
+      </form>
+      <div class="glass">
+        <h3>Get in touch</h3>
+        <p class="muted">Email: hello@mybrand.dev<br/>Location: Remote / Worldwide</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+          <a class="btn" href="#/services">View Services</a>
+          <a class="btn" href="#/projects">See Projects</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>© <span id="year"></span> My Brand. <a href="#/home">Back to top</a></footer>
+
+<script>
+/* ===== STARFIELD BG ===== */
+(() => {
+  const c=document.getElementById('stars'),x=c.getContext('2d');
+  function size(){c.width=innerWidth;c.height=innerHeight} size(); addEventListener('resize',size);
+  const N=170, s=Array.from({length:N},()=>({x:Math.random()*c.width,y:Math.random()*c.height,z:Math.random()*2+.4,r:Math.random()*1.2+.3}));
+  (function tick(){
+    requestAnimationFrame(tick); x.clearRect(0,0,c.width,c.height);
+    for(const a of s){a.x+=a.z; if(a.x>c.width) a.x=0;
+      x.globalAlpha=.5+Math.sin((a.x+a.y).01).25; x.beginPath(); x.arc(a.x,a.y,a.r,0,Math.PI*2); x.fillStyle="#9fd8ff"; x.fill();
+    }
+  })();
+})();
+
+/* ===== BASIC ROUTER (hash) ===== */
+const routes={
+  home:document.getElementById('route-home'),
+  projects:document.getElementById('route-projects'),
+  services:document.getElementById('route-services'),
+  contact:document.getElementById('route-contact')
+};
+const projectsOutlet=document.getElementById('projects-outlet');
+const servicesOutlet=document.getElementById('services-outlet');
+const tabs=[...document.querySelectorAll('.tab')];
+function setActiveTab(hash){ tabs.forEach(t=>t.classList.toggle('active',t.dataset.route===hash)); }
+function show(route,anim="in"){
+  for(const [k,el] of Object.entries(routes)){
+    if(el===route){ el.hidden=false; el.classList.remove('in','flip','slide','zoom'); void el.offsetWidth; el.classList.add(anim); }
+    else el.hidden=true;
+  }
+}
+function navigate(hash){
+  if(!hash||hash==="#") hash="#/home";
+  const parts=hash.split('/').filter(Boolean); // ['#','home','sub','sub2']
+  const base=parts[1]||'home'; const sub=parts[2]||null;
+  setActiveTab(#/${base});
+  const animMap={home:"in",projects:"flip",services:"slide",contact:"zoom"};
+  show(routes[base],animMap[base]||"in");
+
+  // Project sub-routes
+  if(base==='projects'){
+    if(!sub){ projectsOutlet.innerHTML=<p class="muted">Pick a project to open below.</p>; return; }
+    if(sub==='qr') renderQR();
+    else if(sub==='demo') renderDemo();
+    else if(sub==='gallery') renderGallery();
+  }
+
+  // Service sub-routes
+  if(base==='services'){
+    if(!sub){ servicesOutlet.innerHTML=<p class="muted">Select a service to see details.</p>; return; }
+    if(sub==='web') renderService('Web Design',[
+      ['Starter','₹9,999','1-page landing, mobile-first, deploy'],
+      ['Pro','₹24,999','Multi-page + CMS, animations'],
+      ['Elite','₹49,999','Custom SPA, performance + SEO']
+    ]);
+    else if(sub==='brand') renderService('Branding',[
+      ['Logo Kit','₹7,999','Logo + colors + typography'],
+      ['Brand Pack','₹19,999','Styleguide + assets'],
+      ['Full Identity','₹39,999','End-to-end branding']
+    ]);
+    else if(sub==='seo') renderService('SEO Boost',[
+      ['Audit','₹6,999','Core vitals + report'],
+      ['Optimize','₹14,999','Fix issues + speed'],
+      ['Grow','₹29,999','Content + on-page plan']
+    ]);
+  }
+}
+addEventListener('hashchange',()=>navigate(location.hash));
+document.querySelectorAll('[data-route]').forEach(el=>el.addEventListener('click',()=>location.hash=el.dataset.route));
+navigate(location.hash);
+
+/* ===== PROJECT SUB-PAGES ===== */
+function renderQR(){
+  projectsOutlet.innerHTML=`
+    <h3>QR Generator</h3>
+    <div class="glass" style="display:grid;gap:12px">
+      <input id="qrText" class="input" placeholder="Type text or URL…" />
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <select id="qrSize" class="input" style="max-width:140px">
+          <option>150</option><option selected>200</option><option>256</option><option>300</option><option>400</option>
+        </select>
+        <button class="btn" id="makeQR">Generate</button>
+        <a id="dlQR" class="btn" download="qr.png">Download</a>
+        <button class="btn" data-route="#/projects">Back</button>
+      </div>
+      <div id="qrBox" class="glass" style="place-self:center;padding:12px;border-radius:16px"></div>
+      <p class="muted">Uses a free public QR API (works on GitHub Pages).</p>
+    </div>`;
+  document.getElementById('makeQR').onclick=()=>{
+    const t=encodeURIComponent(document.getElementById('qrText').value||location.href);
+    const s=document.getElementById('qrSize').value;
+    const url=https://api.qrserver.com/v1/create-qr-code/?size=${s}x${s}&data=${t};
+    document.getElementById('qrBox').innerHTML=<img src="${url}" width="${s}" height="${s}" alt="QR"/>;
+    document.getElementById('dlQR').href=url;
+  }
+}
+function renderDemo(){
+  projectsOutlet.innerHTML=`
+    <h3>Interactive Demo</h3>
+    <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px">
+      <div class="glass">
+        <h4>Counter</h4>
+        <div style="display:flex;align-items:center;gap:10px">
+          <button class="btn" id="d2">−</button>
+          <div id="c2" style="font-size:28px;min-width:60px;text-align:center">0</div>
+          <button class="btn" id="i2">+</button>
+        </div>
+      </div>
+      <div class="glass">
+        <h4>Accent Color</h4>
+        <input type="color" id="picker" value="#62d0ff"/>
+        <button class="btn" id="apply">Apply</button>
+      </div>
+    </div>
+    <div style="margin-top:10px"><button class="btn" data-route="#/projects">Back</button></div>`;
+  let c=0; const c2=document.getElementById('c2');
+  document.getElementById('i2').onclick=()=>{c++;c2.textContent=c}
+  document.getElementById('d2').onclick=()=>{c=Math.max(0,c-1);c2.textContent=c}
+  document.getElementById('apply').onclick=()=>{document.documentElement.style.setProperty('--pri',document.getElementById('picker').value)}
+}
+function renderGallery(){
+  projectsOutlet.innerHTML=`
+    <h3>3D Gallery</h3>
+    <div id="gal" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;perspective:1000px">
+      ${[1,2,3,4,5,6].map(i=><div class="card tilt" style="height:120px;display:grid;place-items:center;font-weight:700">Card ${i}</div>).join('')}
+    </div>
+    <div style="margin-top:10px"><button class="btn" data-route="#/projects">Back</button></div>`;
+}
+
+/* ===== SERVICE SUB-PAGES ===== */
+function renderService(title, tiers){
+  servicesOutlet.innerHTML=`
+    <div class="grid" style="grid-template-columns:1.1fr .9fr;gap:12px">
+      <div>
+        <h3>${title}</h3>
+        <div class="grid cols-3" id="plans"></div>
+      </div>
+      <div class="glass">
+        <h4>FAQs</h4>
+        <details open><summary>Delivery time?</summary><p class="muted">Starter 3-5 days, Pro 1-2 weeks, Elite 3-4 weeks.</p></details>
+        <details><summary>Revisions?</summary><p class="muted">Every tier includes fair revisions. Elite has unlimited within scope.</p></details>
+        <details><summary>Payment?</summary><p class="muted">50% advance, 50% on delivery. UPI/Bank accepted.</p></details>
+        <div style="margin-top:8px"><a class="btn" href="#/contact">Start a Project</a></div>
+      </div>
+    </div>`;
+  const plans=document.getElementById('plans');
+  plans.innerHTML=tiers.map(([name,price,desc])=>`
+    <div class="card tilt">
+      <span class="badge">${price}</span>
+      <h4>${name}</h4>
+      <p class="muted">${desc}</p>
+      <button class="btn" onclick="location.hash='#/contact'">Choose ${name}</button>
+    </div>`).join('');
+}
+
+/* ===== TILT EFFECT ===== */
+(function tilt(){
+  const cards=()=>document.querySelectorAll('.tilt');
+  const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
+  function onMove(e){
+    const r=this.getBoundingClientRect();
+    const dx=(e.clientX-r.left)/r.width-.5, dy=(e.clientY-r.top)/r.height-.5;
+    this.style.transform=rotateY(${clamp(dx*10,-10,10)}deg) rotateX(${clamp(-dy*10,-10,10)}deg) translateZ(12px);
+  }
+  function onLeave(){this.style.transform='translateZ(0)'}
+  const bind=()=>cards().forEach(c=>{c.addEventL
+    istener('mousemove',onMove);c.addEventListener('mouseleave',onLeave)});
+  bind(); window.addEventListener('hashchange',()=>setTimeout(bind,60));
+})();
+
+/* ===== THEME TOGGLE ===== */
+document.getElementById('theme').onclick=()=>{
+  const dark=getComputedStyle(document.documentElement).getPropertyValue('--bg1')==='#0b1022';
+  if(dark){ // light-ish
+    document.documentElement.style.setProperty('--bg1','#f6f8ff');
+    document.documentElement.style.setProperty('--bg2','#e9f0ff');
+    document.body.style.color='#0a1432';
+  }else{
+    document.documentElement.style.setProperty('--bg1','#0b1022');
+    document.documentElement.style.setProperty('--bg2','#0a1432');
+    document.body.style.color='var(--txt)';
+  }
+  toast('Theme toggled');
+}
+
+/* ===== CONTACT FORM (local demo) + vCard ===== */
+document.getElementById('year').textContent=new Date().getFullYear();
+const form=document.getElementById('contactForm');
+if(form){
+  form.addEventListener('submit',e=>{
+    e.preventDefault();
+    const data={name:document.getElementById('name').value,email:document.getElementById('email').value,msg:document.getElementById('msg').value,date:new Date().toISOString()};
+    const prev=JSON.parse(localStorage.getItem('messages')||'[]'); prev.push(data);
+    localStora
